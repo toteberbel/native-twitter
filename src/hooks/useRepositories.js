@@ -4,7 +4,7 @@ const useRepositories = () => {
   const [data, setData] = useState(null);
 
   useEffect(() => {
-    getData();
+    // getData();
   }, []);
 
   const getData = async () => {

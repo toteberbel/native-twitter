@@ -1,20 +1,21 @@
 const theme = {
   appBar: {
-    primary: "#24292e",
+    primary: "#1DA1F2",
     textSecondary: "#888",
     textPrimary: "#fff",
   },
   colors: {
-    textPrimary: "#24292e",
-    textSecondary: "#586069",
-    primary: "#33b5e5",
+    blue: "#1DA1F2",
+    black: "#14171A",
+    gray: "#657786",
+    lightDark: "#AAB8C2"
   },
   fontSizes: {
     body: 14,
     subheading: 16,
   },
   fonts: {
-    main: "System",
+    main: "Chirp",
   },
   fontWeights: {
     normal: "400",
