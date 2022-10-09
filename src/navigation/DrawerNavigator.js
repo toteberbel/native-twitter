@@ -72,7 +72,6 @@ const DrawerNavigator = ({ nav }) => {
         name={screens.MyFeed}
         component={BottomTabNavigator}
         options={{
-          title: "home",
           headerTitle: () => (
             <Image
               style={styles.headerLogo}

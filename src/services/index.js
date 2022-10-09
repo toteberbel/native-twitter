@@ -1,4 +1,4 @@
-import { getDatabase, ref, onValue, get, child } from "firebase/database";
+import { getDatabase, ref, get, child, push } from "firebase/database";
 import app from "../config/firebase";
 import * as SecureStore from "expo-secure-store";
 
@@ -47,4 +47,20 @@ const getStoredValue = async (key) => {
 
 const storeValue = async (key, value) => {
   await SecureStore.setItemAsync(key, value);
+};
+
+export const postTweet = async (tweet) => {
+  try {
+    const dbRef = ref(getDatabase(), "posts");
+    const data = await push(dbRef, tweet);
+
+    console.log(data);
+    // if (!data.exists()) throw new Error();
+
+    return { data, error: false };
+  } catch (error) {
+    console.error("Something went wrong while trying to get the posts", error);
+  }
+
+  return { error: true };
 };

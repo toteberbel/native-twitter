@@ -4,6 +4,7 @@ import {
   Image,
   FlatList,
   ActivityIndicator,
+  RefreshControl,
 } from "react-native";
 import { useEffect, useState, useContext } from "react";
 import theme from "../theme";
@@ -69,7 +70,9 @@ const mock = [
   },
 ];
 
-const Feed = ({ navigation }) => {
+const Feed = () => {
+  const [refreshing, setRefreshing] = useState(true);
+
   const [loading, setLoading] = useState(false);
   const [posts, setPosts] = useState([]);
   const { user } = useContext(userContext);
@@ -81,7 +84,8 @@ const Feed = ({ navigation }) => {
   const getData = async () => {
     setLoading(true);
     const { error, data } = await getPosts();
-    setLoading(false);
+    setLoading(false);  
+    setRefreshing(false);
 
     if (error) return;
     setPosts(data);
@@ -91,7 +95,7 @@ const Feed = ({ navigation }) => {
     <View
       style={{
         paddingBottom: 75,
-        flex: 1
+        flex: 1,
       }}
     >
       {loading ? (
@@ -99,7 +103,13 @@ const Feed = ({ navigation }) => {
           <ActivityIndicator size={100} color={theme.colors.blue} />
         </View>
       ) : (
-        <FlatList data={posts} renderItem={(post) => <Post post={post} />} />
+        <FlatList
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={getData} />
+          }
+          data={posts}
+          renderItem={(post) => <Post post={post} />}
+        />
       )}
     </View>
   );
