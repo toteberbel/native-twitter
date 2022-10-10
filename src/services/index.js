@@ -1,6 +1,27 @@
 import { getDatabase, ref, get, child, push } from "firebase/database";
 import app from "../config/firebase";
 import * as SecureStore from "expo-secure-store";
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+
+export const createAccount = async (credentials) => {
+  try {
+    const auth = getAuth();
+    const { email, password } = credentials;
+
+    const userInfo = await createUserWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
+
+    if (!userInfo.user) throw new Error();
+
+    return { error: false };
+  } catch (error) {
+    console.error(error);
+  }
+  return { error: true };
+};
 
 export const getPosts = async () => {
   try {

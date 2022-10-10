@@ -6,9 +6,10 @@ import {
   DrawerItem,
 } from "@react-navigation/drawer";
 import Icon from "react-native-vector-icons/FontAwesome";
-import { AntDesign } from "@expo/vector-icons";
 import BottomTabNavigator from "./BottomTabNavigator";
 import { routes, screens } from "./RouteItems";
+import { MaterialIcons } from "@expo/vector-icons";
+import { signOut, getAuth } from "firebase/auth";
 
 const Drawer = createDrawerNavigator();
 
@@ -50,6 +51,8 @@ const CustomDrawerContent = (props) => {
 };
 
 const DrawerNavigator = ({ nav }) => {
+  const auth = getAuth();
+
   return (
     <Drawer.Navigator
       screenOptions={({ navigation }) => ({
@@ -63,6 +66,14 @@ const DrawerNavigator = ({ nav }) => {
             style={styles.headerLeft}
           >
             <Icon name="bars" size={20} color="gray" />
+          </TouchableOpacity>
+        ),
+        headerRight: () => (
+          <TouchableOpacity
+            onPress={() => signOut(auth)}
+            style={styles.headerRight}
+          >
+            <MaterialIcons name="logout" size={24} color="gray" />
           </TouchableOpacity>
         ),
       })}

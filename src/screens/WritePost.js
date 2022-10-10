@@ -10,12 +10,13 @@ import { userContext } from "../context/userContext";
 import { getUser, postTweet } from "../services";
 import theme from "../theme";
 
+const user = {}; // TEMPORAL !!!!!!
+
 const WritePost = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
 
   const [post, setPost] = useState({ text: "" });
-  const { user } = useContext(userContext);
 
   const onChange = (name, value) => {
     setPost({ [name]: value });

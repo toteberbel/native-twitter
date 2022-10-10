@@ -4,12 +4,16 @@ import { SafeAreaView, StatusBar, StyleSheet } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { useFonts } from "expo-font";
 import DrawerNavigator from "./src/navigation/DrawerNavigator";
-import UserProvider from "./src/context/userContext";
+import UnauthStack from "./src/navigation/unauth-navigator";
+import { useAuthentication } from "./src/hooks/useAuthentication";
+import { signOut } from "firebase/auth";
 
 const navigationRef = createRef();
 const nav = () => navigationRef.current;
 
 const App = () => {
+  const { user } = useAuthentication();
+
   const [loaded] = useFonts({
     Chirp: require("./assets/fonts/Chirp.otf"),
   });
@@ -17,15 +21,12 @@ const App = () => {
   if (!loaded) {
     return null;
   }
-
   return (
     <SafeAreaView style={styles.safeArea}>
       <StatusBar barStyle="light" />
-      <UserProvider>
-        <NavigationContainer ref={navigationRef}>
-          <DrawerNavigator nav={nav} />
-        </NavigationContainer>
-      </UserProvider>
+      <NavigationContainer ref={navigationRef}>
+        {user ? <DrawerNavigator nav={nav} /> : <UnauthStack />}
+      </NavigationContainer>
     </SafeAreaView>
   );
 };

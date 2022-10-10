@@ -1,16 +1,14 @@
 import {
   View,
-  StyleSheet,
-  Image,
   FlatList,
   ActivityIndicator,
   RefreshControl,
+  Button,
 } from "react-native";
 import { useEffect, useState, useContext } from "react";
 import theme from "../theme";
 import { Post } from "../components/shared";
 import { getPosts, getUser } from "../services";
-import { userContext } from "../context/userContext";
 
 const mock = [
   {
@@ -75,7 +73,8 @@ const Feed = () => {
 
   const [loading, setLoading] = useState(false);
   const [posts, setPosts] = useState([]);
-  const { user } = useContext(userContext);
+
+  // const auth = getAuth();
 
   useEffect(() => {
     getData();
@@ -84,7 +83,7 @@ const Feed = () => {
   const getData = async () => {
     setLoading(true);
     const { error, data } = await getPosts();
-    setLoading(false);  
+    setLoading(false);
     setRefreshing(false);
 
     if (error) return;
@@ -98,6 +97,7 @@ const Feed = () => {
         flex: 1,
       }}
     >
+      {/* <Button onPress={() => signOut(auth)} title="la" /> */}
       {loading ? (
         <View style={{ flex: 1, justifyContent: "center" }}>
           <ActivityIndicator size={100} color={theme.colors.blue} />

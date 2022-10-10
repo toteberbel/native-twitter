@@ -1,28 +1,24 @@
 import { useState } from "react";
-import {
-  View,
-  Dimensions,
-  StyleSheet,
-  Image,
-  TouchableOpacity,
-} from "react-native";
+import { View, Dimensions, StyleSheet, Image } from "react-native";
 import { ActivityIndicator } from "react-native";
 import {
   ButtonSecondary,
   StyledText,
   StyledTextInput,
 } from "../components/shared";
+import { createAccount } from "../services";
 import theme from "../theme";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 
-const Login = ({ navigation }) => {
-  const auth = getAuth();
-
+const SignUp = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(false);
+
   const [errors, setErrors] = useState({});
 
-  const [credentials, setCredentials] = useState({ email: "", password: "" });
+  const [credentials, setCredentials] = useState({
+    email: "",
+    password: "",
+    confirmPassword: "",
+  });
 
   const onChange = (name, value) => {
     setCredentials({ ...credentials, [name]: value });
@@ -34,10 +30,34 @@ const Login = ({ navigation }) => {
     if (!email.trim())
       validationErrors = { ...validationErrors, email: "Email is required" };
 
+    if (!/^\S+@\S+\.\S+$/.test(email))
+      validationErrors = {
+        ...validationErrors,
+        email: "You must enter a valid email",
+      };
+
     if (!password.trim())
       validationErrors = {
         ...validationErrors,
         password: "Password is required",
+      };
+
+    if (password.length < 6)
+      validationErrors = {
+        ...validationErrors,
+        password: "Password should be at least 6 characters",
+      };
+
+    if (!confirmPassword.trim())
+      validationErrors = {
+        ...validationErrors,
+        password: "You must confirm your password",
+      };
+
+    if (confirmPassword !== password)
+      validationErrors = {
+        ...validationErrors,
+        confirmPassword: "Passwords do not match",
       };
 
     setErrors(validationErrors);
@@ -45,28 +65,22 @@ const Login = ({ navigation }) => {
     return !Object.keys(validationErrors).length;
   };
 
-  const onLogin = async () => {
+  const onSignin = async () => {
     if (!formIsValid()) return;
 
     setLoading(true);
 
-    try {
-      const response = await signInWithEmailAndPassword(auth, email, password);
-      console.log(response);
-    } catch (error) {
-      console.error(error);
-      const errorMsg = error.toString();
-
-      errorMsg.includes("user-not-found") ||
-      errorMsg.includes("wrong-password")
-        ? setErrors({ server: "The username or the password are invalid" })
-        : setErrors({ server: "Something went wrong. Please try again later" });
-    }
+    const { error } = await createAccount({ email, password });
 
     setLoading(false);
+
+    if (error)
+      setErrors({ server: "Something went wrong. Please try again later" });
+
+    // navigation.navigate("Login");
   };
 
-  const { email, password } = credentials;
+  const { email, password, confirmPassword } = credentials;
 
   return (
     <View
@@ -86,7 +100,7 @@ const Login = ({ navigation }) => {
         </View>
 
         <StyledText style={styles.title} color="primary" fontWeight="bold">
-          Glad to see you again!
+          Be part of the Twitter family
         </StyledText>
 
         <View style={styles.form}>
@@ -94,7 +108,7 @@ const Login = ({ navigation }) => {
             placeholder="Enter your email"
             onChangeText={(e) => onChange("email", e)}
             label="Email"
-            type="email-address"
+            type={"email-address"}
           />
           {errors.email && (
             <View style={{ alignItems: "center", marginVertical: 5 }}>
@@ -117,11 +131,21 @@ const Login = ({ navigation }) => {
           )}
         </View>
 
-        <TouchableOpacity onPress={() => navigation.navigate("Signup")}>
-          <StyledText style={styles.signupLink} color={"primary"}>
-            Don't have an account yet? Create one
-          </StyledText>
-        </TouchableOpacity>
+        <View style={styles.form}>
+          <StyledTextInput
+            placeholder="Confirm password"
+            onChangeText={(e) => onChange("confirmPassword", e)}
+            label="Confirm password"
+            isPassword
+          />
+          {errors.confirmPassword && (
+            <View style={{ alignItems: "center", marginVertical: 5 }}>
+              <StyledText customColor="red">
+                {errors.confirmPassword}
+              </StyledText>
+            </View>
+          )}
+        </View>
 
         <View style={{ marginVertical: 10 }}>
           {loading ? (
@@ -130,8 +154,8 @@ const Login = ({ navigation }) => {
             </View>
           ) : (
             <ButtonSecondary
-              onPress={onLogin}
-              title="Log in"
+              onPress={onSignin}
+              title="Sign up"
               isDisabled={!email && !password}
             />
           )}
@@ -178,4 +202,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Login;
+export default SignUp;
