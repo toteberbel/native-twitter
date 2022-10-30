@@ -9,6 +9,7 @@ const UnauthStack = () => {
     <Stack.Navigator
       screenOptions={{
         headerStyle: { backgroundColor: theme.colors.blue },
+        animationEnabled: false,
       }}
     >
       <Stack.Screen

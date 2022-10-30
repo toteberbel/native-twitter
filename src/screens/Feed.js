@@ -3,6 +3,7 @@ import {
   FlatList,
   ActivityIndicator,
   RefreshControl,
+  TouchableHighlight,
   Button,
 } from "react-native";
 import { useEffect, useState, useContext } from "react";
@@ -14,61 +15,18 @@ const mock = [
   {
     id: "1",
     ownerId: "1",
-    user: "rodrigob",
-    userName: "Rodrigo Berbel",
+    username: "rodrigob",
+    name: "Rodrigo Berbel",
     date: new Date(),
-    post: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it",
-    ownerAvatar: "https://xsgames.co/randomusers/assets/avatars/male/1.jpg",
-    likes: 0,
-    retweets: 0,
-  },
-  {
-    id: "2",
-    ownerId: "2",
-    user: "manuelParker",
-    userName: "Manuel Parker Lois",
-    date: new Date(),
-    post: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it",
-    ownerAvatar: "https://xsgames.co/randomusers/assets/avatars/male/2.jpg",
-    likes: 0,
-    retweets: 0,
-  },
-  {
-    id: "3",
-    ownerId: "3",
-    user: "frgrab",
-    userName: "Franco Grabois",
-    date: new Date(),
-    post: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it",
-    ownerAvatar: "https://xsgames.co/randomusers/assets/avatars/male/3.jpg",
-    likes: 0,
-    retweets: 0,
-  },
-  {
-    id: "4",
-    ownerId: "4",
-    user: "sofister",
-    userName: "Sofia Blanco",
-    date: new Date(),
-    post: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it",
-    ownerAvatar: "https://xsgames.co/randomusers/assets/avatars/female/1.jpg",
-    likes: 0,
-    retweets: 0,
-  },
-  {
-    id: "5",
-    ownerId: "5",
-    user: "armandomaradona",
-    userName: "Armando Casas",
-    date: new Date(),
-    post: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it",
-    ownerAvatar: "https://xsgames.co/randomusers/assets/avatars/male/5.jpg",
-    likes: 0,
-    retweets: 0,
+    text: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it",
+    avatar: "https://xsgames.co/randomusers/assets/avatars/male/1.jpg",
+    likesCount: 0,
+    sharedCount: 0,
+    commentsCount: 0,
   },
 ];
 
-const Feed = () => {
+const Feed = ({ navigation }) => {
   const [refreshing, setRefreshing] = useState(true);
 
   const [loading, setLoading] = useState(false);
@@ -90,6 +48,12 @@ const Feed = () => {
     setPosts(data);
   };
 
+  const onLike = (id) => console.log(id);
+
+  const onOpenTweet = (post) => {
+    navigation.navigate("Tweet", post);
+  };
+
   return (
     <View
       style={{
@@ -97,7 +61,6 @@ const Feed = () => {
         flex: 1,
       }}
     >
-      {/* <Button onPress={() => signOut(auth)} title="la" /> */}
       {loading ? (
         <View style={{ flex: 1, justifyContent: "center" }}>
           <ActivityIndicator size={100} color={theme.colors.blue} />
@@ -108,7 +71,17 @@ const Feed = () => {
             <RefreshControl refreshing={refreshing} onRefresh={getData} />
           }
           data={posts}
-          renderItem={(post) => <Post post={post} />}
+          renderItem={({ item }) => {
+            return (
+              <TouchableHighlight
+                activeOpacity={0.6}
+                underlayColor="#DDDDDD"
+                onPress={() => onOpenTweet(item)}
+              >
+                <Post post={item} onLike={onLike} />
+              </TouchableHighlight>
+            );
+          }}
         />
       )}
     </View>

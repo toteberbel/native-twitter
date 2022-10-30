@@ -1,4 +1,12 @@
-import { getDatabase, ref, get, child, push } from "firebase/database";
+import {
+  getDatabase,
+  ref,
+  get,
+  child,
+  push,
+  set,
+  onValue,
+} from "firebase/database";
 import app from "../config/firebase";
 import * as SecureStore from "expo-secure-store";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
@@ -6,15 +14,27 @@ import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 export const createAccount = async (credentials) => {
   try {
     const auth = getAuth();
-    const { email, password } = credentials;
+    const { email, password, name, username, profileImage } = credentials;
 
-    const userInfo = await createUserWithEmailAndPassword(
+    const { user } = await createUserWithEmailAndPassword(
       auth,
       email,
       password
     );
 
-    if (!userInfo.user) throw new Error();
+    if (!user) throw new Error();
+
+    const dbRef = ref(getDatabase(), "/users/" + user.uid);
+
+    const response = await set(dbRef, {
+      name,
+      username,
+      avatar: profileImage,
+      id: user.uid,
+      email,
+    });
+
+    console.log(response);
 
     return { error: false };
   } catch (error) {
@@ -26,7 +46,7 @@ export const createAccount = async (credentials) => {
 export const getPosts = async () => {
   try {
     const dbRef = ref(getDatabase());
-    const data = await get(child(dbRef, "posts"));
+    const data = await get(child(dbRef, "posts-rodri"));
 
     if (!data.exists()) throw new Error();
 
@@ -72,15 +92,44 @@ const storeValue = async (key, value) => {
 
 export const postTweet = async (tweet) => {
   try {
-    const dbRef = ref(getDatabase(), "posts");
+    const dbRef = ref(getDatabase(), "posts-rodri");
     const data = await push(dbRef, tweet);
 
-    console.log(data);
     // if (!data.exists()) throw new Error();
 
     return { data, error: false };
   } catch (error) {
     console.error("Something went wrong while trying to get the posts", error);
+  }
+
+  return { error: true };
+};
+
+export const getUserById = async (userId) => {
+  try {
+    const dbRef = ref(getDatabase());
+    const data = await get(child(dbRef, "users/" + userId));
+
+    if (!data.exists()) throw new Error();
+
+    return { data: data.val(), error: false };
+  } catch (error) {
+    console.error("Something went wrong while trying to get the user", error);
+  }
+
+  return { error: true };
+};
+
+export const getCommentsByPost = async (postId) => {
+  try {
+    const dbRef = ref(getDatabase());
+    const data = await get(child(dbRef, "comments-rodri/" + postId));
+
+    if (!data.exists()) throw new Error();
+
+    return { data: data.val(), error: false };
+  } catch (error) {
+    console.error("Something went wrong while trying to get the user", error);
   }
 
   return { error: true };

@@ -18,6 +18,9 @@ const SignUp = ({ navigation }) => {
     email: "",
     password: "",
     confirmPassword: "",
+    name: "",
+    username: "",
+    profileImage: "https://media-exp1.licdn.com/dms/image/C4D03AQHqED0-dhqhRQ/profile-displayphoto-shrink_400_400/0/1630696441436?e=1668038400&v=beta&t=fZm8rK0cE1x4dVPzM6931JLUJEgeE0K_9-pu2npaiD0",
   });
 
   const onChange = (name, value) => {
@@ -60,6 +63,15 @@ const SignUp = ({ navigation }) => {
         confirmPassword: "Passwords do not match",
       };
 
+    if (!name)
+      validationErrors = { ...validationErrors, name: "Name is required" };
+
+    if (!username)
+      validationErrors = {
+        ...validationErrors,
+        username: "Username is required",
+      };
+
     setErrors(validationErrors);
 
     return !Object.keys(validationErrors).length;
@@ -70,7 +82,7 @@ const SignUp = ({ navigation }) => {
 
     setLoading(true);
 
-    const { error } = await createAccount({ email, password });
+    const { error } = await createAccount(credentials);
 
     setLoading(false);
 
@@ -80,7 +92,8 @@ const SignUp = ({ navigation }) => {
     // navigation.navigate("Login");
   };
 
-  const { email, password, confirmPassword } = credentials;
+  const { email, profileImage, password, confirmPassword, name, username } =
+    credentials;
 
   return (
     <View
@@ -105,6 +118,40 @@ const SignUp = ({ navigation }) => {
 
         <View style={styles.form}>
           <StyledTextInput
+            placeholder="Enter your name"
+            onChangeText={(e) => onChange("name", e)}
+            label="Name"
+          />
+          {errors.name && (
+            <View style={{ alignItems: "center", marginVertical: 5 }}>
+              <StyledText customColor="red">{errors.name}</StyledText>
+            </View>
+          )}
+        </View>
+
+        <View style={styles.form}>
+          <StyledTextInput
+            placeholder="Enter a user name"
+            onChangeText={(e) => onChange("username", e)}
+            label="Username"
+          />
+          {errors.username && (
+            <View style={{ alignItems: "center", marginVertical: 5 }}>
+              <StyledText customColor="red">{errors.username}</StyledText>
+            </View>
+          )}
+        </View>
+
+        <View style={styles.form}>
+          <StyledTextInput
+            placeholder="Enter a profile photo URL"
+            onChangeText={(e) => onChange("profileImage", e)}
+            label="Profile photo URL (optional)"
+          />
+        </View>
+
+        <View style={styles.form}>
+          <StyledTextInput
             placeholder="Enter your email"
             onChangeText={(e) => onChange("email", e)}
             label="Email"
@@ -119,7 +166,7 @@ const SignUp = ({ navigation }) => {
 
         <View style={styles.form}>
           <StyledTextInput
-            placeholder="Enter your password"
+            placeholder="Enter a password"
             onChangeText={(e) => onChange("password", e)}
             label="Password"
             isPassword

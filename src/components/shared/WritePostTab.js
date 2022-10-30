@@ -1,5 +1,4 @@
 import { AntDesign } from "@expo/vector-icons";
-import { TouchableOpacity, Text } from "react-native";
 import { View } from "react-native";
 
 const WritePostTab = () => {

@@ -7,12 +7,17 @@ import DrawerNavigator from "./src/navigation/DrawerNavigator";
 import UnauthStack from "./src/navigation/unauth-navigator";
 import { useAuthentication } from "./src/hooks/useAuthentication";
 import { signOut } from "firebase/auth";
+import { LogBox } from "react-native";
 
 const navigationRef = createRef();
 const nav = () => navigationRef.current;
 
 const App = () => {
-  const { user } = useAuthentication();
+  LogBox.ignoreLogs([
+    "Warning: Async Storage has been extracted from react-native core",
+  ]);
+
+  const { isAuthenticated } = useAuthentication();
 
   const [loaded] = useFonts({
     Chirp: require("./assets/fonts/Chirp.otf"),
@@ -25,7 +30,7 @@ const App = () => {
     <SafeAreaView style={styles.safeArea}>
       <StatusBar barStyle="light" />
       <NavigationContainer ref={navigationRef}>
-        {user ? <DrawerNavigator nav={nav} /> : <UnauthStack />}
+        {isAuthenticated ? <DrawerNavigator nav={nav} /> : <UnauthStack />}
       </NavigationContainer>
     </SafeAreaView>
   );

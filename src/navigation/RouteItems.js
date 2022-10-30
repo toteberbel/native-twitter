@@ -8,6 +8,10 @@ export const screens = {
   FeedStack: "FeedStack",
   Feed: "Feed",
 
+  Tweet: "Tweet",
+  TweetStack: "FeedStack",
+  TweetTab: "FeedTab",
+
   MyFeedTab: "MyFeedTab",
   MyFeedStack: "MyFeedStack",
   MyFeed: "MyFeed",
@@ -45,6 +49,27 @@ export const routes = [
     name: screens.Feed,
     focusedRoute: screens.FeedStack,
     title: "Feed",
+    showInTab: true,
+    showInDrawer: false,
+    icon: ({ color, size }) => (
+      <MaterialIcons name="dynamic-feed" size={size} color={color} />
+    ),
+  },
+
+  {
+    name: screens.TweetStack,
+    focusedRoute: screens.FeedStack,
+    title: "Tweet",
+    showInTab: true,
+    showInDrawer: false,
+    icon: ({ color, size }) => (
+      <MaterialIcons name="dynamic-feed" size={size} color={color} />
+    ),
+  },
+  {
+    name: screens.Tweet,
+    focusedRoute: screens.FeedStack,
+    title: "Tweet",
     showInTab: true,
     showInDrawer: false,
     icon: ({ color, size }) => (

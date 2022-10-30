@@ -7,10 +7,10 @@ import {
   ButtonSecondary,
 } from "../components/shared";
 import { userContext } from "../context/userContext";
+import { useAuthentication } from "../hooks/useAuthentication";
 import { getUser, postTweet } from "../services";
 import theme from "../theme";
-
-const user = {}; // TEMPORAL !!!!!!
+import noProfileImage from "../../assets/no-image.jpg";
 
 const WritePost = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
@@ -18,20 +18,19 @@ const WritePost = ({ navigation }) => {
 
   const [post, setPost] = useState({ text: "" });
 
+  const { user } = useAuthentication();
+
   const onChange = (name, value) => {
     setPost({ [name]: value });
   };
+
   const onPost = async () => {
     setError(false);
     setLoading(true);
 
     const payload = {
-      commentsCount: 23,
-      image:
-        "https://static.wikia.nocookie.net/memes-pedia/images/b/b7/Ola_k_ase.jpg/revision/latest?cb=20160227193105&path-prefix=es",
-      likesCount: 3219,
-      sharesCount: 29,
       text: post.text,
+      date: new Date(),
       user,
     };
 
@@ -44,6 +43,8 @@ const WritePost = ({ navigation }) => {
       return;
     }
 
+    setPost({ text: "" });
+
     navigation.navigate("FeedStack");
   };
 
@@ -51,7 +52,10 @@ const WritePost = ({ navigation }) => {
     <View style={styles.container}>
       <View style={{ alignItems: "center" }}>
         <View style={styles.imageContainer}>
-          <Image style={styles.image} source={{ uri: user.avatar }} />
+          <Image
+            style={styles.image}
+            source={user.avatar ? { uri: user.avatar } : noProfileImage}
+          />
         </View>
       </View>
       <View style={styles.inputContainer}>

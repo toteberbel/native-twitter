@@ -5,6 +5,7 @@ import { Text, StyleSheet, View } from "react-native";
 import { routes, screens } from "./RouteItems";
 
 import { Feed, MyFeed, WritePost } from "../screens";
+import HomeStackNavigator from "./stack-navigators/HomeStackNavigator";
 
 const Tab = createBottomTabNavigator();
 
@@ -35,7 +36,7 @@ const tabOptions = ({ route }) => {
 const BottomTabNavigator = () => {
   return (
     <Tab.Navigator screenOptions={tabOptions}>
-      <Tab.Screen name={screens.FeedStack} component={Feed} />
+      <Tab.Screen name={screens.FeedStack} component={HomeStackNavigator} />
       <Tab.Screen name={screens.WritePostStack} component={WritePost} />
       <Tab.Screen name={screens.MyFeedStack} component={MyFeed} />
     </Tab.Navigator>

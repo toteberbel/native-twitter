@@ -3,7 +3,11 @@ export const getFormattedDate = (date = new Date()) => {
   const month = date.getUTCMonth() + 1;
   const year = date.getUTCFullYear();
   const hour = date.getHours();
-  const minutes = date.getMinutes();
+  let minutes = date.getMinutes();
+
+  if (minutes < 10) {
+    minutes = minutes.toString() + 0;
+  }
 
   return `${day}/${month}/${year} ${hour}:${minutes}`;
 };
