@@ -1,20 +1,46 @@
-import { NativeRouter, Route, Routes } from "react-router-native";
-import Main from "./src/components/Main";
-import { StatusBar } from "expo-status-bar";
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import "react-native-gesture-handler";
+import React, { createRef, useEffect } from "react";
+import { SafeAreaView, StatusBar, StyleSheet } from "react-native";
+import { NavigationContainer } from "@react-navigation/native";
+import { useFonts } from "expo-font";
+import DrawerNavigator from "./src/navigation/DrawerNavigator";
+import UnauthStack from "./src/navigation/unauth-navigator";
+import { useAuthentication } from "./src/hooks/useAuthentication";
+import { signOut } from "firebase/auth";
+import { LogBox } from "react-native";
 
-const Stack = createNativeStackNavigator();
+const navigationRef = createRef();
+const nav = () => navigationRef.current;
 
 const App = () => {
+  LogBox.ignoreLogs([
+    "Warning: Async Storage has been extracted from react-native core",
+  ]);
+
+  const { isAuthenticated } = useAuthentication();
+
+  const [loaded] = useFonts({
+    Chirp: require("./assets/fonts/Chirp.otf"),
+  });
+
+  if (!loaded) {
+    return null;
+  }
   return (
-    <>
-      <StatusBar style="light" />
-      <NativeRouter>
-        <Main />
-      </NativeRouter>
-    </>
+    <SafeAreaView style={styles.safeArea}>
+      <StatusBar barStyle="light" />
+      <NavigationContainer ref={navigationRef}>
+        {isAuthenticated ? <DrawerNavigator nav={nav} /> : <UnauthStack />}
+      </NavigationContainer>
+    </SafeAreaView>
   );
 };
+
+const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    overflow: "hidden",
+  },
+});
 
 export default App;

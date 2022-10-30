@@ -1,5 +1,5 @@
 import { Text, StyleSheet } from "react-native";
-import theme from "../theme.js";
+import theme from "../../theme.js";
 
 const styles = StyleSheet.create({
   text: {
@@ -12,10 +12,10 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   colorPrimary: {
-    color: theme.colors.primary,
+    color: theme.colors.blue,
   },
   colorSecondary: {
-    color: theme.colors.textSecondary,
+    color: theme.colors.gray,
   },
   colorWhite: {
     color: "#fff",
@@ -35,10 +35,12 @@ const StyledText = ({
   children,
   style,
   textAlign,
+  customColor,
   ...restOfProps
 }) => {
   const textStyles = [
     styles.text,
+    customColor && { color: customColor },
     color === "primary" && styles.colorPrimary,
     color === "secondary" && styles.colorSecondary,
     color === "white" && styles.colorWhite,
