@@ -5,7 +5,7 @@ import {
   child,
   push,
   set,
-  onValue,
+  update,
 } from "firebase/database";
 import app from "../config/firebase";
 import * as SecureStore from "expo-secure-store";
@@ -28,13 +28,11 @@ export const createAccount = async (credentials) => {
 
     const response = await set(dbRef, {
       name,
-      username,
+      username: username?.toLowerCase(),
       avatar: profileImage,
       id: user.uid,
       email,
     });
-
-    console.log(response);
 
     return { error: false };
   } catch (error) {
@@ -125,12 +123,34 @@ export const getCommentsByPost = async (postId) => {
     const dbRef = ref(getDatabase());
     const data = await get(child(dbRef, "comments-rodri/" + postId));
 
-    if (!data.exists()) throw new Error();
+    if (!data.exists()) return { data: [], error: false };
 
-    return { data: data.val(), error: false };
+    const commentsObject = data.val();
+
+    let comments = [];
+    Object.keys(commentsObject).forEach((key) => {
+      comments.push(commentsObject[key]);
+    });
+
+    return { data: comments, error: false };
   } catch (error) {
     console.error("Something went wrong while trying to get the user", error);
   }
 
+  return { error: true };
+};
+
+export const postComment = async (tweetId, comment) => {
+  try {
+    const dbRef = ref(getDatabase(), "/comments-rodri/" + tweetId);
+
+    const { error } = await push(dbRef, comment);
+
+    if (error) throw new Error();
+
+    return { error: false };
+  } catch (error) {
+    console.error(error);
+  }
   return { error: true };
 };

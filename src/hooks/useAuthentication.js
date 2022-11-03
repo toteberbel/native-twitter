@@ -10,7 +10,7 @@ export function useAuthentication() {
 
   const getUserData = async (userId) => {
     const { error, data } = await getUserById(userId);
-    console.log(data, "authe");
+
     if (!error) setUser(data);
   };
 

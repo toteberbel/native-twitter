@@ -20,7 +20,7 @@ const SignUp = ({ navigation }) => {
     confirmPassword: "",
     name: "",
     username: "",
-    profileImage: "https://media-exp1.licdn.com/dms/image/C4D03AQHqED0-dhqhRQ/profile-displayphoto-shrink_400_400/0/1630696441436?e=1668038400&v=beta&t=fZm8rK0cE1x4dVPzM6931JLUJEgeE0K_9-pu2npaiD0",
+    profileImage: "",
   });
 
   const onChange = (name, value) => {

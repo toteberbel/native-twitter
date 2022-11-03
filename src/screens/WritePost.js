@@ -30,7 +30,7 @@ const WritePost = ({ navigation }) => {
 
     const payload = {
       text: post.text,
-      date: new Date(),
+      date: new Date().getTime(),
       user,
     };
 

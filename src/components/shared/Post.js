@@ -75,7 +75,6 @@ const Post = ({
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     flexDirection: "row",
     paddingHorizontal: 25,
     justifyContent: "center",
