@@ -1,12 +1,8 @@
 import {
   View,
-  FlatList,
   ActivityIndicator,
-  RefreshControl,
   ScrollView,
-  TouchableHighlight,
   TouchableOpacity,
-  Button,
   StyleSheet,
   SafeAreaView,
 } from "react-native";

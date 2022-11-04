@@ -69,6 +69,32 @@ export const getPosts = async () => {
   return { error: true };
 };
 
+export const getPostsById = async (userId) => {
+  try {
+    const dbRef = ref(getDatabase());
+    const data = await get(child(dbRef, "posts-rodri"));
+
+    if (!data.exists()) throw new Error();
+
+    const values = data.val();
+
+    const maped = Object.keys(values).map((id) => ({
+      id,
+      ...values[id],
+    }));
+
+    console.log(maped);
+
+    const filtered = maped.filter((post) => post.user?.id === userId);
+
+    return { data: filtered, error: false };
+  } catch (error) {
+    console.error("Something went wrong while trying to get the posts", error);
+  }
+
+  return { error: true };
+};
+
 export const getUser = async () => {
   const user = await getStoredValue("user");
 
