@@ -11,7 +11,7 @@ import { Post } from "../components/shared";
 import { getPostsById } from "../services";
 import { useAuthentication } from "../hooks/useAuthentication";
 
-const MyFeed = () => {
+const MyFeed = ({ navigation }) => {
   const { user } = useAuthentication();
   const [refreshing, setRefreshing] = useState(true);
 
