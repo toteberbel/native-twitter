@@ -71,17 +71,15 @@ const Feed = ({ navigation }) => {
             <RefreshControl refreshing={refreshing} onRefresh={getData} />
           }
           data={posts}
-          renderItem={({ item }) => {
-            return (
-              <TouchableHighlight
-                activeOpacity={0.6}
-                underlayColor="#DDDDDD"
-                onPress={() => onOpenTweet(item)}
-              >
-                <Post post={item} onLike={onLike} />
-              </TouchableHighlight>
-            );
-          }}
+          renderItem={({ item }) => (
+            <TouchableHighlight
+              activeOpacity={0.6}
+              underlayColor="#DDDDDD"
+              onPress={() => onOpenTweet(item)}
+            >
+              <Post post={item} onLike={onLike} />
+            </TouchableHighlight>
+          )}
         />
       )}
     </View>

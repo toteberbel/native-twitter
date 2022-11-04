@@ -6,10 +6,16 @@ import {
   push,
   set,
   update,
+  remove,
 } from "firebase/database";
 import app from "../config/firebase";
 import * as SecureStore from "expo-secure-store";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+
+export const removeData = async () => {
+  const dbRef = ref(getDatabase(), "/comments-rodri");
+  await remove(dbRef);
+};
 
 export const createAccount = async (credentials) => {
   try {

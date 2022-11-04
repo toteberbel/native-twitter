@@ -14,13 +14,11 @@ import noProfileImage from "../../../assets/no-image.jpg";
 const Post = ({
   post: { id, date, text, likesCount, commentsCount, sharedCount, user },
   onLike,
-  // post: {
-  //   item: { id, image, likesCount, sharesCount, text, user = {} },
-  // },
+  bordered,
 }) => {
   return (
     <View key={id} style={styles.container}>
-      <View style={styles.postCard}>
+      <View style={[styles.postCard, bordered && styles.bordered]}>
         <View style={styles.postHeader}>
           <View style={{ marginRight: 5 }}>
             <Image
@@ -103,6 +101,10 @@ const styles = StyleSheet.create({
     shadowOffset: { width: -2, height: 4 },
     shadowOpacity: 0.2,
     shadowRadius: 3,
+  },
+  bordered: {
+    borderWidth: 2,
+    borderColor: theme.colors.blue,
   },
   postActions: {
     flexDirection: "row",
