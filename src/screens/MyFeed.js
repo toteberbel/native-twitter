@@ -21,8 +21,9 @@ const MyFeed = ({ navigation }) => {
   // const auth = getAuth();
 
   useEffect(() => {
+    if (!user) return;
     getData();
-  }, []);
+  }, [user]);
 
   const getData = async () => {
     setLoading(true);
