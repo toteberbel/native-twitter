@@ -6,6 +6,7 @@ import { routes, screens } from "./RouteItems";
 
 import { Feed, MyFeed, WritePost } from "../screens";
 import HomeStackNavigator from "./stack-navigators/HomeStackNavigator";
+import theme from "../theme";
 
 const Tab = createBottomTabNavigator();
 
@@ -53,6 +54,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     borderRadius: 15,
     height: 60,
+    borderWidth: 2,
+    borderColor: "#90cff5",
   },
 });
 

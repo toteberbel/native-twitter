@@ -5,11 +5,17 @@ import {
   child,
   push,
   set,
-  onValue,
+  update,
+  remove,
 } from "firebase/database";
 import app from "../config/firebase";
 import * as SecureStore from "expo-secure-store";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+
+export const removeData = async () => {
+  const dbRef = ref(getDatabase(), "/comments-rodri");
+  await remove(dbRef);
+};
 
 export const createAccount = async (credentials) => {
   try {
@@ -28,13 +34,11 @@ export const createAccount = async (credentials) => {
 
     const response = await set(dbRef, {
       name,
-      username,
+      username: username?.toLowerCase(),
       avatar: profileImage,
       id: user.uid,
       email,
     });
-
-    console.log(response);
 
     return { error: false };
   } catch (error) {
@@ -58,6 +62,32 @@ export const getPosts = async () => {
     }));
 
     return { data: maped, error: false };
+  } catch (error) {
+    console.error("Something went wrong while trying to get the posts", error);
+  }
+
+  return { error: true };
+};
+
+export const getPostsById = async (userId) => {
+  try {
+    const dbRef = ref(getDatabase());
+    const data = await get(child(dbRef, "posts-rodri"));
+
+    if (!data.exists()) throw new Error();
+
+    const values = data.val();
+
+    const maped = Object.keys(values).map((id) => ({
+      id,
+      ...values[id],
+    }));
+
+    console.log(maped);
+
+    const filtered = maped.filter((post) => post.user?.id === userId);
+
+    return { data: filtered, error: false };
   } catch (error) {
     console.error("Something went wrong while trying to get the posts", error);
   }
@@ -125,12 +155,34 @@ export const getCommentsByPost = async (postId) => {
     const dbRef = ref(getDatabase());
     const data = await get(child(dbRef, "comments-rodri/" + postId));
 
-    if (!data.exists()) throw new Error();
+    if (!data.exists()) return { data: [], error: false };
 
-    return { data: data.val(), error: false };
+    const commentsObject = data.val();
+
+    let comments = [];
+    Object.keys(commentsObject).forEach((key) => {
+      comments.push(commentsObject[key]);
+    });
+
+    return { data: comments, error: false };
   } catch (error) {
     console.error("Something went wrong while trying to get the user", error);
   }
 
+  return { error: true };
+};
+
+export const postComment = async (tweetId, comment) => {
+  try {
+    const dbRef = ref(getDatabase(), "/comments-rodri/" + tweetId);
+
+    const { error } = await push(dbRef, comment);
+
+    if (error) throw new Error();
+
+    return { error: false };
+  } catch (error) {
+    console.error(error);
+  }
   return { error: true };
 };

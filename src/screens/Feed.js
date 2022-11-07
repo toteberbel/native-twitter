@@ -9,7 +9,8 @@ import {
 import { useEffect, useState, useContext } from "react";
 import theme from "../theme";
 import { Post } from "../components/shared";
-import { getPosts, getUser } from "../services";
+import { getPosts } from "../services";
+import { useAuthentication } from "../hooks/useAuthentication";
 
 const mock = [
   {
@@ -27,12 +28,12 @@ const mock = [
 ];
 
 const Feed = ({ navigation }) => {
+  const { user } = useAuthentication();
+
   const [refreshing, setRefreshing] = useState(true);
 
   const [loading, setLoading] = useState(false);
   const [posts, setPosts] = useState([]);
-
-  // const auth = getAuth();
 
   useEffect(() => {
     getData();
@@ -40,7 +41,7 @@ const Feed = ({ navigation }) => {
 
   const getData = async () => {
     setLoading(true);
-    const { error, data } = await getPosts();
+    const { error, data } = await getPosts(user.id);
     setLoading(false);
     setRefreshing(false);
 
@@ -71,17 +72,15 @@ const Feed = ({ navigation }) => {
             <RefreshControl refreshing={refreshing} onRefresh={getData} />
           }
           data={posts}
-          renderItem={({ item }) => {
-            return (
-              <TouchableHighlight
-                activeOpacity={0.6}
-                underlayColor="#DDDDDD"
-                onPress={() => onOpenTweet(item)}
-              >
-                <Post post={item} onLike={onLike} />
-              </TouchableHighlight>
-            );
-          }}
+          renderItem={({ item }) => (
+            <TouchableHighlight
+              activeOpacity={0.6}
+              underlayColor="#DDDDDD"
+              onPress={() => onOpenTweet(item)}
+            >
+              <Post post={item} onLike={onLike} />
+            </TouchableHighlight>
+          )}
         />
       )}
     </View>

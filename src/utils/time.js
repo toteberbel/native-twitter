@@ -1,4 +1,5 @@
 export const getFormattedDate = (date = new Date()) => {
+  date = new Date(date);
   const day = date.getDate();
   const month = date.getUTCMonth() + 1;
   const year = date.getUTCFullYear();
